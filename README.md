@@ -89,10 +89,12 @@ mkdir -p ~/.claude/skills && cp -r ~/agent-skills/plugins/arif-skills/skills/* ~
 | Skill | Invoke | What it does |
 | --- | --- | --- |
 | `hello-world` | `/hello-world [name]` | Greets you and confirms the plugin is installed. |
+| `grill-me` | `/grill-me <idea>` | Interrogates an idea with at most 2 rounds × 4 multiple-choice questions (simplest option recommended), then writes a short plan to `docs/plans/<slug>.md` ready for `issues-breakdown`. |
 | `ask-me` | `/ask-me` | Checks whether the agent is blocked on a decision only you can make, and asks it with answer options you can pick. |
 | `issues-breakdown` | `/issues-breakdown [plan or file]` | Turns a plan into GitHub issues (parent + sub-issues) with clear tasks, Definition of Done and testing steps, clear enough for a small model to implement, labelled `ready` for `issues-batch`. |
 | `issues-batch` | `/issues-batch [#parent \| label \| #n #m ...] [max=10] [--plan]` | Picks a related group of `ready` issues (open, unassigned, not in progress, not failed twice) by itself and works it autonomously: one fresh subagent per issue (max 3 at once, 15 per run, 5 issues by default), reviews and merges their work onto one branch/PR, decides instead of asking, tests, closes the issues and waits for green CI — leftover problems become `needs-decision` / `follow-up` issues. `--plan` only shows the plan. |
 | `issues-sync` | `/issues-sync [#parent \| label \| 90d]` | Summarises done vs. pending issues, checks issue status against the code (closed by mistake, forgot to close, stale in-progress, answered decisions, needs refinement), applies fixes after one approval, and updates a `Status report` issue. |
+| `pr-review` | `/pr-review [#pr \| branch] [--post]` | Reviews a PR against the Definition of Done of its issues, hunts bugs and weakened tests, runs tests/lint, and gives a verdict (safe to merge / merge after fixes / do not merge). `--post` submits it as a GitHub comment review. |
 
 Plugin skills are namespaced: in menus they appear as `arif-skills:hello-world`.
 Claude also picks a skill automatically when your request matches its
@@ -117,6 +119,10 @@ plugins/
       issues-batch/
         SKILL.md
       issues-sync/
+        SKILL.md
+      grill-me/
+        SKILL.md
+      pr-review/
         SKILL.md
 ```
 
