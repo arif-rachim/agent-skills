@@ -21,7 +21,8 @@ Talk to the user in their own language. Write the plan file in **English**
 | --- | --- |
 | Rounds of questions | **At most 2.** |
 | Questions per round | **At most 4** (one `AskUserQuestion` call per round). |
-| Options per question | 2–4, the **simplest viable option first, marked (Recommended)**. |
+| Options per question | 2–4, the **simplest viable option first, marked (Recommended)**. "Viable" means it is still correct, secure, loses no data and can be undone; never recommend an option only because it is the least work. |
+| What counts as a question | **Any** request for the user's input, in the tool or in plain text. A multi-select question is one question and must be about one decision, not a bundle. |
 | Second round | Only if a round-1 answer **changed the shape of the work** and the new gap would block the plan. Otherwise go straight to the plan. |
 | Per question | It must pass the test: *"If I don't know this, I will build the wrong thing."* If not, decide it yourself and note the assumption. |
 
@@ -61,8 +62,17 @@ Walk these areas and keep only gaps that pass the test in Hard limits:
 8. **Rollout** — feature flag, migration order, backwards compatibility,
    anything irreversible.
 
-Pick the **4 most consequential** gaps. If there are fewer than 4, ask fewer.
-If there are none, say so and write the plan.
+Pick the **4 most consequential** gaps, preferring the ones whose wrong
+answer is **expensive to reverse** (data model, public API, storage,
+anything irreversible) over ones that can be changed in an afternoon. If
+there are fewer than 4, ask fewer. If there are none, say so and write the
+plan.
+
+If the idea is too vague to even picture the simplest implementation ("an
+app for X"), spend round 1 on the goal: who it is for, the one thing it must
+do, and what "done" looks like. If it is still vague after round 2, write the
+plan for the **smallest concrete slice** you can describe and say that is
+what you did.
 
 ## 3. Ask (round 1)
 
@@ -85,7 +95,11 @@ of "single user" raises a data-isolation question)? If yes, ask **up to 4**
 more questions, same rules. If no, do not ask anything else — even if you
 have "a few more small ones". Those become assumptions.
 
-After round 2 there are **no more questions**, whatever remains.
+If you do ask a round 2, name the round-1 answer that forced it. After round
+2 there are **no more questions**, whatever remains.
+
+If the user answers with free text instead of an option, extract the
+decision from it and continue; do not start a discussion.
 
 ## 5. Write the plan
 
@@ -93,6 +107,14 @@ Produce the plan in chat **and** save it to `docs/plans/<slug>.md` in the
 repository (`<slug>` = short kebab-case name of the feature, prefixed with
 the date: `2026-11-05-invoice-csv-export.md`). Create the folder if needed.
 Do not commit it unless the user asks; tell them the path.
+
+- **No repository** (the idea is not tied to a codebase): put the plan in
+  chat only and say so; the user can paste it into `issues-breakdown` later.
+- **A plan for the same feature already exists** in `docs/plans/` (same slug
+  or clearly the same topic): read it first, carry its Decisions and
+  Assumptions over unless today's answers change them, and write a **new
+  file** with today's date (note "Supersedes <old file>" at the top). Never
+  overwrite the old plan.
 
 Template (keep it to about one screen; this is a plan, not a spec):
 
@@ -145,3 +167,7 @@ user says yes, invoke that skill with the file path.
   an assumption. Nothing is left as "to be discussed".
 - If the user starts going deep on a detail, pull back: note it under
   "Open questions deferred" and continue to the plan.
+- **After the plan is written, the grilling is over.** New points the user
+  raises are added to Decisions, Assumptions or Deferred in the plan file —
+  without new questions. Only if the *goal* itself changed, offer to run
+  `grill-me` again as a fresh session for the new goal.

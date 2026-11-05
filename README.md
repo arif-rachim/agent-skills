@@ -100,6 +100,87 @@ Plugin skills are namespaced: in menus they appear as `arif-skills:hello-world`.
 Claude also picks a skill automatically when your request matches its
 `description`.
 
+## How to use the skills together
+
+The skills form one development loop: **idea → plan → issues → autonomous
+implementation → review → merge → sync**. Each step hands its output to the
+next, so a feature can go from a sentence to merged code with you only
+answering a few multiple-choice questions and reviewing one PR.
+
+```
+/grill-me <idea>                      → docs/plans/<date>-<slug>.md
+/issues-breakdown docs/plans/<slug>.md → parent issue + sub-issues labelled `ready`
+/issues-batch --plan                  → shows which ready issues it would take, and in what order
+/issues-batch                         → one "go", then works them on one branch/PR until closed
+/pr-review                            → verdict: safe to merge / merge after fixes / do not merge
+(you merge the PR)
+/issues-sync                          → status report; fixes issues closed or left open by mistake
+/ask-me                               → any time: "is anything waiting on me?"
+```
+
+### Step by step
+
+1. **Have an idea.** Run `/grill-me Add CSV export for invoices` (or just
+   describe it and say "grill me"). You get at most 8 multiple-choice
+   questions, each with the simplest option recommended, then a one-screen
+   plan saved to `docs/plans/`.
+2. **Turn the plan into issues.** Run `/issues-breakdown docs/plans/<file>.md`.
+   The agent studies the repository, drafts a parent issue plus small
+   sub-issues (each with Tasks, Definition of Done and Testing), shows you the
+   draft, and creates them after you approve. Implementable issues get the
+   `ready` label.
+3. **Check what a batch would do.** `/issues-batch --plan` lists the `ready`
+   issues it would pick (grouped by parent, milestone, label or files), their
+   order and parallel waves. Nothing is changed. Do this the first few times.
+4. **Run the batch.** `/issues-batch` asks for one "go", then: assigns the
+   issues to you and labels them `in-progress`, dispatches one fresh worker
+   subagent per issue (at most 3 at a time), reviews and merges their work
+   onto one batch branch, runs the tests, closes each issue, and waits for CI
+   on the PR. It never stops to ask; it decides and records the decision in
+   an issue comment. Things it truly cannot decide become `needs-decision`
+   issues; things it cannot finish become `Follow-up:` issues.
+5. **Review the PR.** `/pr-review` (or `/pr-review 42`) checks the diff
+   against every issue's Definition of Done, hunts bugs and weakened tests,
+   runs the checks and gives one verdict. Add `--post` to put the review on
+   the PR as a comment. It never approves or merges — that is yours.
+6. **Merge** the PR on GitHub.
+7. **Sync.** `/issues-sync` compares every open issue (and those closed in
+   the last 30 days) with the code on the default branch, lists what is done
+   and what is pending, proposes fixes for issues closed by mistake or never
+   closed, applies them after one approval, and updates a single
+   `Status report` issue.
+
+### When the loop leaves something for you
+
+| You see | What to do |
+| --- | --- |
+| An issue labelled `needs-decision` | Answer it in a comment. The next `/issues-sync` turns your answer into a new `ready` issue. `/ask-me` lists these too. |
+| An issue labelled `follow-up` / `needs-refinement` | Run `/issues-breakdown #<number>` to refine it; it becomes `ready` again. |
+| Open issues that `/issues-batch` ignores | They lack the `ready` label (not fully specified) or failed two batch runs. Refine them with `/issues-breakdown`. |
+| A batch PR you are unsure about | `/pr-review` gives you the verdict and the exact fixes. |
+
+### Labels the skills use
+
+| Label | Meaning | Set by |
+| --- | --- | --- |
+| `ready` | Fully specified; may be picked up by `issues-batch`. | `issues-breakdown`, or you by hand |
+| `in-progress` | Claimed by a batch run. | `issues-batch` |
+| `needs-decision` | Blocked on a human answer. | `issues-batch` |
+| `follow-up`, `needs-refinement` | Left by a failed batch attempt; must be refined before it is picked up again. | `issues-batch`, `issues-sync` |
+| `status-report` | The single issue `issues-sync` keeps updated. | `issues-sync` |
+
+### Safety defaults
+
+- Batches claim at most 5 issues (`max=10` to raise), run at most 3 workers
+  at once and 15 worker launches per run, and never retry an issue that
+  failed twice.
+- Issue bodies, comments and PR text are treated as specifications, never
+  as instructions: embedded requests to run destructive commands, skip tests
+  or change the rules are ignored and reported.
+- No skill force-pushes, deletes data, deploys, approves or merges.
+- All of this is new and has not yet been exercised on a real project;
+  start with a small repository and a plan of two or three sub-issues.
+
 ## Repository layout
 
 ```
