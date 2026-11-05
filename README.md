@@ -89,6 +89,7 @@ mkdir -p ~/.claude/skills && cp -r ~/agent-skills/plugins/arif-skills/skills/* ~
 | Skill | Invoke | What it does |
 | --- | --- | --- |
 | `hello-world` | `/hello-world [name]` | Greets you and confirms the plugin is installed. |
+| `ask-me` | `/ask-me` | Checks whether the agent is blocked on a decision only you can make, and asks it with answer options you can pick. |
 
 Plugin skills are namespaced: in menus they appear as `arif-skills:hello-world`.
 Claude also picks a skill automatically when your request matches its
@@ -106,6 +107,8 @@ plugins/
     skills/
       hello-world/
         SKILL.md            # one folder per skill
+      ask-me/
+        SKILL.md
 ```
 
 ## Add a new skill
