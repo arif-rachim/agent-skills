@@ -1,0 +1,18 @@
+{
+  "name": "arif-agent-skills",
+  "owner": {
+    "name": "Arif Rachim"
+  },
+  "metadata": {
+    "description": "Personal Claude Code skills and commands by Arif Rachim.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "arif-skills",
+      "source": "./plugins/arif-skills",
+      "description": "Collection of Arif Rachim's agent skills.",
+      "version": "0.1.0"
+    }
+  ]
+}
