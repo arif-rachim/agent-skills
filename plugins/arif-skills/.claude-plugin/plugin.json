@@ -1,0 +1,10 @@
+{
+  "name": "arif-skills",
+  "description": "Collection of Arif Rachim's agent skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Arif Rachim"
+  },
+  "repository": "https://github.com/arif-rachim/agent-skills",
+  "license": "MIT"
+}
