@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Personal Claude Code skills and commands by Arif Rachim.",
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "plugins": [
     {
       "name": "arif-skills",
       "source": "./plugins/arif-skills",
       "description": "Collection of Arif Rachim's agent skills.",
-      "version": "0.6.0"
+      "version": "0.7.0"
     }
   ]
 }

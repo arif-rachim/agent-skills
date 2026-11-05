@@ -19,7 +19,11 @@ progress or that you parked for the user:
 - assumptions you made but never confirmed;
 - open choices (design, naming, scope, approach);
 - questions you asked earlier that the user never answered;
-- instructions that contradict each other.
+- instructions that contradict each other;
+- if the work is in a git repository with GitHub issues: open issues
+  labelled `needs-decision` that no collaborator has answered yet (they were
+  raised by an `issues-batch` run and are blocking work). Include each one as
+  a decision, with the options the issue lists.
 
 ## 2. Keep only real decisions
 
