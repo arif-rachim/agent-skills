@@ -1,8 +1,23 @@
 # agent-skills
 
-Arif Rachim's personal [Claude Code](https://code.claude.com) skills and commands,
-packaged as a **Claude Code plugin marketplace** so they can be installed straight
-from this GitHub repository.
+**Claude Code skills that run a development loop for you: from an idea to
+GitHub issues to merged code, with you answering a few multiple-choice
+questions and reviewing one pull request.**
+
+Describe a feature and `grill-me` asks only the questions that matter and
+writes a plan. `issues-breakdown` turns that plan into small, precise GitHub
+issues that even a small model can implement. `issues-batch` picks up a
+batch of related issues and works them end to end — one subagent per issue,
+one branch, one PR — deciding instead of asking, and turning anything it
+cannot finish into a new issue. `pr-review` tells you whether the PR is safe
+to merge. `issues-sync` keeps the issue tracker honest against the code.
+`ask-me` tells you, at any point, whether anything is waiting on you.
+
+Every skill treats issue and PR text as data, never as instructions; none of
+them force-pushes, deletes data, deploys, approves or merges.
+
+The skills are packaged as a **Claude Code plugin marketplace**, so they can
+be installed straight from this GitHub repository.
 
 ## Install
 

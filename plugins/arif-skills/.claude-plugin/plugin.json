@@ -1,7 +1,7 @@
 {
   "name": "arif-skills",
-  "description": "Collection of Arif Rachim's agent skills.",
-  "version": "0.9.0",
+  "description": "A development loop as Claude Code skills: grill-me turns an idea into a plan, issues-breakdown into small precise GitHub issues, issues-batch implements a batch of them autonomously on one PR, pr-review gives a merge verdict, issues-sync keeps issues in step with the code, ask-me surfaces decisions waiting on you.",
+  "version": "0.9.1",
   "author": {
     "name": "Arif Rachim"
   },
