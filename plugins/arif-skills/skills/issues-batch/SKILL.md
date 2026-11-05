@@ -1,6 +1,6 @@
 ---
 name: issues-batch
-description: Runs a batch of related GitHub issues end to end without stopping — claims them (assign to the running GitHub user + `in-progress` label), implements them in dependency order on one branch with one commit per issue, makes the recommended decision instead of asking, tests, and closes every issue; anything that cannot be finished becomes a new issue. Use when the user invokes /issues-batch, or asks to "work these issues in a batch", "run the sub-issues of #10", "kerjakan issue-issue ini sekaligus".
+description: Picks a batch of related open, unassigned, not-in-progress GitHub issues by itself (or within a parent/label the user names) and works it end to end without stopping — claims them (assign to the running GitHub user + `in-progress` label), implements them in dependency order on one branch with one commit per issue, makes the recommended decision instead of asking, tests, and closes every issue; anything that cannot be finished becomes a new issue. Use when the user invokes /issues-batch, or asks to "work these issues in a batch", "work on the open issues", "pick up the next issues", "run the sub-issues of #10", "kerjakan issue yang masih terbuka", "kerjakan issue-issue ini sekaligus".
 ---
 
 # Issues batch
@@ -27,33 +27,41 @@ user in their own language.
 
 ## 1. Select the batch
 
-Input (`$ARGUMENTS`) is one of:
-
-- a parent issue (`#10`): take its open sub-issues (or the issues in its task list);
-- a label or milestone: take its open issues;
-- explicit issue numbers (`#11 #12 #13`).
-
-If nothing is given, ask the user once what to run.
-
-Then:
+By default the agent **chooses the batch itself**; the user does not need to
+name any issues. `$ARGUMENTS` is optional and only narrows the choice (a
+parent issue `#10`, a label, a milestone, or explicit numbers `#11 #12`).
 
 1. Resolve the repository (the user's, otherwise `git remote get-url origin`).
 2. Find the GitHub login running this action (GitHub MCP `get_me`, or
    `gh api user --jq .login`).
-3. Drop issues that are closed, assigned to someone else, or already labelled
-   `in-progress`. Drop issues blocked by an open issue that is outside the batch.
-4. Check that the issues are related (same parent, label, milestone, or
-   touching the same area). If some are unrelated, leave them out and say so.
-5. Order them: issues they depend on first (`Blocked by #n`, `Depends on #n`),
+3. **List eligible issues**: open, **no assignee**, **not** labelled
+   `in-progress`, and not labelled `needs-decision`. Pull requests are not
+   issues; skip them. If `$ARGUMENTS` was given, keep only eligible issues
+   inside that scope.
+4. **Pick one related group** from the eligible issues, trying these in order
+   and taking the first that yields a group:
+   1. open sub-issues (or task-list items) of the same parent issue — prefer
+      the parent whose work is already furthest along, then the oldest parent;
+   2. issues in the same milestone;
+   3. issues sharing a feature/area label (ignore generic labels such as
+      `bug`, `enhancement`, `good first issue`);
+   4. issues touching the same files or module, judged from their bodies.
+
+   If no group of two or more exists, take the single oldest eligible issue
+   whose dependencies are all closed.
+5. Drop issues blocked by an open issue that is outside the group.
+6. Order them: issues they depend on first (`Blocked by #n`, `Depends on #n`),
    then by `[k/n]` prefix, then by issue number.
-6. If more than 10 remain, take the first 10 in that order; the rest wait for
-   the next run.
+7. Take at most the first 10 in that order; the rest wait for the next run.
+
+If there are no eligible issues, tell the user and stop.
 
 ## 2. Confirm once
 
-Show the user, in a short list: the repository, the branch name you will use,
-and the ordered issues (number, title, one line each), plus any issues you
-dropped and why. Ask for a single "go".
+Show the user, in a short list: the repository, why these issues form a group
+(e.g. "sub-issues of #10"), the branch name you will use, and the ordered
+issues (number, title, one line each), plus any issues you dropped and why.
+Ask for a single "go".
 
 This is the **only** question in the run. Once the user says go, do not ask
 anything else until the final report.
