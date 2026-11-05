@@ -4,15 +4,15 @@
     "name": "Arif Rachim"
   },
   "metadata": {
-    "description": "Personal Claude Code skills and commands by Arif Rachim.",
-    "version": "0.9.0"
+    "description": "Arif Rachim's Claude Code skills: an idea-to-merged-code development loop driven by GitHub issues, with multiple-choice questions instead of open-ended ones.",
+    "version": "0.9.1"
   },
   "plugins": [
     {
       "name": "arif-skills",
       "source": "./plugins/arif-skills",
-      "description": "Collection of Arif Rachim's agent skills.",
-      "version": "0.9.0"
+      "description": "A development loop as Claude Code skills: grill-me turns an idea into a plan, issues-breakdown into small precise GitHub issues, issues-batch implements a batch of them autonomously on one PR, pr-review gives a merge verdict, issues-sync keeps issues in step with the code, ask-me surfaces decisions waiting on you.",
+      "version": "0.9.1"
     }
   ]
 }
