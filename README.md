@@ -92,6 +92,7 @@ mkdir -p ~/.claude/skills && cp -r ~/agent-skills/plugins/arif-skills/skills/* ~
 | `ask-me` | `/ask-me` | Checks whether the agent is blocked on a decision only you can make, and asks it with answer options you can pick. |
 | `issues-breakdown` | `/issues-breakdown [plan or file]` | Turns a plan into GitHub issues (parent + sub-issues) with clear tasks, Definition of Done and testing steps, clear enough for a small model to implement. |
 | `issues-batch` | `/issues-batch [#parent \| label \| #n #m ...]` | Picks a related group of open, unassigned, not-in-progress issues by itself (or within the scope you give) and works it autonomously on one branch/PR: claims them, implements in order, decides instead of asking, tests, and closes them — leftover problems become new issues. |
+| `issues-sync` | `/issues-sync [#parent \| label \| 90d]` | Summarises done vs. pending issues, checks issue status against the code (closed by mistake, forgot to close, stale in-progress), applies fixes after one approval, and updates a `Status report` issue. |
 
 Plugin skills are namespaced: in menus they appear as `arif-skills:hello-world`.
 Claude also picks a skill automatically when your request matches its
@@ -114,6 +115,8 @@ plugins/
       issues-breakdown/
         SKILL.md
       issues-batch/
+        SKILL.md
+      issues-sync/
         SKILL.md
 ```
 
