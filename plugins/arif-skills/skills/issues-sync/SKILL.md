@@ -71,7 +71,7 @@ Put every issue in exactly one bucket:
 | 🟡 Forgot to close | Open, but the code on the default branch already meets its Definition of Done. |
 | 🚧 In progress | Open, assigned or labelled `in-progress`, with recent activity (commits, PR or comments within 7 days). |
 | 🟠 Stale in progress | Open, labelled `in-progress` or assigned, but no activity for more than 7 days. |
-| ⏳ Pending | Open, not started. Note if it is blocked by another open issue or waiting on a `needs-decision` issue. |
+| ⏳ Pending | Open, not started. Note if it is blocked by another open issue or waiting on a `needs-decision` issue, and whether it is labelled `ready` (only `ready` issues are picked up by `issues-batch`). |
 | ❔ Unclear | Evidence is insufficient to decide. Say what is missing. |
 
 Also check parent issues: a closed parent with open sub-issues is 🔴; an open
@@ -85,6 +85,8 @@ Reply in chat with:
    milestone (e.g. `#10 Invoice export — 4/6 done`).
 2. **Mismatches** (🔴, 🟡, 🟠 and the 🔀 list), each with its evidence line.
 3. **Pending work**, ordered by what can start now (dependencies closed) first.
+   Flag pending issues that are not `ready`, and issues labelled `ready` that
+   lack Tasks, Definition of Done or Testing (they need refining first).
 4. **Proposed fixes**, one line each:
    - 🔴 → reopen the issue with a comment listing what is missing (or, if the
      gap is small and separate, keep it closed and create a `Follow-up:`

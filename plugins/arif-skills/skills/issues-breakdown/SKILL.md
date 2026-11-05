@@ -140,8 +140,14 @@ After approval:
 3. Link each sub-issue to the parent as a GitHub sub-issue. If sub-issues are
    not available, add a task list to the parent body instead:
    `- [ ] #123 Title`.
-4. Apply existing labels where they clearly fit. Do not create new labels
-   unless the user asked.
+4. Apply existing labels where they clearly fit. Do not create other new
+   labels unless the user asked.
+5. Add the label **`ready`** to every issue that is meant to be implemented
+   (each sub-issue, or the single issue when there is no parent) and that has
+   complete Tasks, Definition of Done and Testing sections. Do not add it to
+   the parent issue. Create the label if missing (colour `0e8a16`,
+   description "Fully specified; can be picked up by issues-batch").
+   `issues-batch` only picks up issues labelled `ready`.
 
 Use the GitHub MCP tools when they are available (`issue_write`,
 `sub_issue_write`), otherwise the `gh` CLI (`gh issue create`, `gh issue
