@@ -90,6 +90,7 @@ mkdir -p ~/.claude/skills && cp -r ~/agent-skills/plugins/arif-skills/skills/* ~
 | --- | --- | --- |
 | `hello-world` | `/hello-world [name]` | Greets you and confirms the plugin is installed. |
 | `ask-me` | `/ask-me` | Checks whether the agent is blocked on a decision only you can make, and asks it with answer options you can pick. |
+| `issues-breakdown` | `/issues-breakdown [plan or file]` | Turns a plan into GitHub issues (parent + sub-issues) with clear tasks, Definition of Done and testing steps, clear enough for a small model to implement. |
 
 Plugin skills are namespaced: in menus they appear as `arif-skills:hello-world`.
 Claude also picks a skill automatically when your request matches its
@@ -108,6 +109,8 @@ plugins/
       hello-world/
         SKILL.md            # one folder per skill
       ask-me/
+        SKILL.md
+      issues-breakdown/
         SKILL.md
 ```
 
